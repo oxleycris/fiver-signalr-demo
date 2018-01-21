@@ -47,7 +47,7 @@ namespace Fiver.Asp.SignalR.API.Controllers
 
         //POST: api/Reports
         [HttpPost]
-        public async Task<IActionResult> PostReport([FromBody] Report report)
+        public async Task<IActionResult> PostReport(Report report)
         {
             if (!ModelState.IsValid)
             {

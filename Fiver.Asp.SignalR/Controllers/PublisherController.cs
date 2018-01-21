@@ -4,6 +4,9 @@ namespace Fiver.Asp.SignalR.Controllers
 {
     public class PublisherController : Controller
     {
-        public IActionResult Index() => View();
+        public IActionResult Index()
+        {
+            return View();
+        }
     }
 }

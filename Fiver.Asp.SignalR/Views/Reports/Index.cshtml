@@ -2,9 +2,9 @@
 
 <h2>Reports</h2>
 <ul id="reports">
-    @foreach (var report in Model.Reports.OrderBy(x => x.DateAdded))
+    @foreach (var report in Model.Reports.OrderByDescending(x => x.DateAdded))
     {
-        <li>@report.Name</li>
+        <li>@report.DateAdded.ToShortDateString() - @report.Name</li>
     }
 </ul>
 

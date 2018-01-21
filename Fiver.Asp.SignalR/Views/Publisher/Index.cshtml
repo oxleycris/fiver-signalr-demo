@@ -11,9 +11,22 @@
             let httpConnection = new signalR.HttpConnection(hubUrl);
             let hubConnection = new signalR.HubConnection(httpConnection);
 
+            var reportName = $('#reportName').val();
+            var dataJSON = { reportName: reportName };
+
             $("#publishReport").click(function () {
-                hubConnection.invoke('PublishReport', $('#reportName').val());
-                $('#reportName').val("");
+                console.log(reportName);
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://localhost:58179/api/reports',
+                    data: JSON.stringify(dataJSON),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json'
+                }).done(function () {
+                    alert("frgr");
+                    hubConnection.invoke('PublishReport', reportName);
+                    $('#reportName').val("");
+                });
             });
 
             hubConnection.on('BroadcastMessage', data => {

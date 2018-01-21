@@ -1,0 +1,27 @@
+﻿<h2>Publisher</h2>
+<input type="text" id="reportName" placeholder="Enter report name" />
+<input type="button" id="publishReport" value="Publish" />
+<div id="message">Any important messages will display here...</div>
+
+@section scripts {
+    <script>
+        $(function () {
+
+            let hubUrl = 'http://localhost:58179/reportsPublisher';
+            let httpConnection = new signalR.HttpConnection(hubUrl);
+            let hubConnection = new signalR.HubConnection(httpConnection);
+
+            $("#publishReport").click(function () {
+                hubConnection.invoke('PublishReport', $('#reportName').val());
+                $('#reportName').val("");
+            });
+
+            hubConnection.on('BroadcastMessage', data => {
+                console.log(data);
+                $('#message').text(data);
+            });
+
+            hubConnection.start();
+        });
+    </script>
+}

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
-using Fiver.Asp.SignalR.API.Data;
 using Fiver.Asp.SignalR.API.Data.Entities;
 using Microsoft.AspNetCore.SignalR;
 
@@ -9,25 +8,11 @@ namespace Fiver.Asp.SignalR.API.Hubs
 {
     public class ReportsPublisher : Hub
     {
-        private readonly ApplicationDbContext _applicationDbContext;
         private static readonly ConcurrentDictionary<string, string> Connections = new ConcurrentDictionary<string, string>();
 
-        public ReportsPublisher(ApplicationDbContext applicationDbContext)
+        public Task PublishReport(Report report)
         {
-            _applicationDbContext = applicationDbContext;
-        }
-
-        public Task PublishReport(string reportName)
-        {
-            using (var db = _applicationDbContext)
-            {
-                var report = new Report { Id = Guid.NewGuid().ToString(), Name = reportName };
-
-                db.Reports.Add(report);
-                db.SaveChanges();
-            }
-
-            return Clients.All.InvokeAsync("OnReportPublished", reportName);
+            return Clients.All.InvokeAsync("OnReportPublished", report);
         }
 
         public override Task OnConnectedAsync()

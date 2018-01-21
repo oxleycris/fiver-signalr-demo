@@ -1,40 +1,14 @@
-﻿<h2>Publisher</h2>
-<input type="text" id="reportName" placeholder="Enter report name" />
-<input type="button" id="publishReport" value="Publish" />
-<div id="message">Any important messages will display here...</div>
-
-@section scripts {
-    <script>
-        $(function () {
-
-            let hubUrl = 'http://localhost:58179/reportsPublisher';
-            let httpConnection = new signalR.HttpConnection(hubUrl);
-            let hubConnection = new signalR.HubConnection(httpConnection);
-
-            var reportName = $('#reportName').val();
-            var dataJSON = { reportName: reportName };
-
-            $("#publishReport").click(function () {
-                console.log(reportName);
-                $.ajax({
-                    type: 'POST',
-                    url: 'http://localhost:58179/api/reports',
-                    data: JSON.stringify(dataJSON),
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json'
-                }).done(function () {
-                    alert("frgr");
-                    hubConnection.invoke('PublishReport', reportName);
-                    $('#reportName').val("");
-                });
-            });
-
-            hubConnection.on('BroadcastMessage', data => {
-                console.log(data);
-                $('#message').text(data);
-            });
-
-            hubConnection.start();
-        });
-    </script>
+﻿@section scripts{
+    <script type="text/javascript" src="@Url.Content("~/js/publisher.js")"></script>
 }
+
+@if (!ViewData.ModelState.IsValid)
+{
+    @Html.ValidationSummary(false)
+}
+
+<h2>Publisher</h2>
+<input type="text" id="reportName" placeholder="Enter report name" />
+<button id="publishReport">Publish</button>
+
+<div id="message">Any important messages will display here...</div>

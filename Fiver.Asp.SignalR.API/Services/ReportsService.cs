@@ -7,6 +7,7 @@ namespace Fiver.Asp.SignalR.API.Services
     public interface IReportsService
     {
         IEnumerable<Report> GetReports();
+        void AddReport(Report result);
     }
 
     public class ReportsService : IReportsService
@@ -23,6 +24,15 @@ namespace Fiver.Asp.SignalR.API.Services
             using (var db = _applicationDbContext)
             {
                 return db.Reports;
+            }
+        }
+
+        public void AddReport(Report report)
+        {
+            using (var db = _applicationDbContext)
+            {
+                db.Reports.Add(report);
+                db.SaveChanges();
             }
         }
     }

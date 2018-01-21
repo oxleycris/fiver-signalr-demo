@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Fiver.Asp.SignalR.API.Data;
 using Fiver.Asp.SignalR.API.Data.Entities;
+using Fiver.Asp.SignalR.API.Services;
+using Fiver.Asp.SignalR.API.Models;
 
 namespace Fiver.Asp.SignalR.API.Controllers
 {
@@ -12,18 +14,20 @@ namespace Fiver.Asp.SignalR.API.Controllers
     [Route("api/Reports")]
     public class ReportsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _dbContext;
+        private readonly IReportsService _reportsService;
 
-        public ReportsController(ApplicationDbContext context)
+        public ReportsController(ApplicationDbContext dbContext, IReportsService reportsService)
         {
-            _context = context;
+            _dbContext = dbContext;
+            _reportsService = reportsService;
         }
 
         // GET: api/Reports
         [HttpGet]
         public IEnumerable<Report> GetReports()
         {
-            return _context.Reports;
+            return _dbContext.Reports;
         }
 
         // GET: api/Reports/5
@@ -35,7 +39,7 @@ namespace Fiver.Asp.SignalR.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var report = await _context.Reports.SingleOrDefaultAsync(m => m.Id == id);
+            var report = await _dbContext.Reports.SingleOrDefaultAsync(m => m.Id == id);
 
             if (report == null)
             {
@@ -47,17 +51,20 @@ namespace Fiver.Asp.SignalR.API.Controllers
 
         //POST: api/Reports
         [HttpPost]
-        public async Task<IActionResult> PostReport(Report report)
+        public IActionResult PostReport([FromBody] ReportPostRequest report)
         {
-            if (!ModelState.IsValid)
+            if (string.IsNullOrWhiteSpace(report.Name))
             {
+                ModelState.AddModelError("Name", "Report name is required");
+
                 return BadRequest(ModelState);
             }
 
-            _context.Reports.Add(report);
-            await _context.SaveChangesAsync();
+            var result = new Report { Name = report.Name };
 
-            return CreatedAtAction("GetReport", new { id = report.Id }, report);
+            _reportsService.AddReport(result);
+
+            return CreatedAtAction("GetReport", new { id = result.Id }, result);
         }
 
         //// DELETE: api/Reports/5
@@ -118,7 +125,7 @@ namespace Fiver.Asp.SignalR.API.Controllers
 
         private bool ReportExists(string id)
         {
-            return _context.Reports.Any(e => e.Id == id);
+            return _dbContext.Reports.Any(e => e.Id == id);
         }
     }
 }

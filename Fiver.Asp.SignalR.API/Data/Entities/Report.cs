@@ -6,7 +6,7 @@ namespace Fiver.Asp.SignalR.API.Data.Entities
     public class Report
     {
         [Key]
-        public string Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
         public string Name { get; set; }

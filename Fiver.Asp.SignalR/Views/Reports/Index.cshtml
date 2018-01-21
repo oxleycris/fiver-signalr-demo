@@ -1,26 +1,14 @@
 ﻿@model Fiver.Asp.SignalR.Models.ViewModels.ReportsViewModel
 
+@section scripts{
+    <script type="text/javascript" src="@Url.Content("~/js/reports.js")"></script>
+}
+
 <h2>Reports</h2>
+
 <ul id="reports">
     @foreach (var report in Model.Reports.OrderByDescending(x => x.DateAdded))
     {
         <li>@report.DateAdded.ToShortDateString() - @report.Name</li>
     }
 </ul>
-
-@section scripts {
-    <script>
-        $(function () {
-
-            let hubUrl = 'http://localhost:58179/reportsPublisher';
-            let httpConnection = new signalR.HttpConnection(hubUrl);
-            let hubConnection = new signalR.HubConnection(httpConnection);
-
-            hubConnection.on('OnReportPublished', data => {
-                $('#reports').append($('<li>').text(data));
-            });
-
-            hubConnection.start();
-        });
-    </script>
-}

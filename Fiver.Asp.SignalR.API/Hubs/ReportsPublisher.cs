@@ -15,6 +15,11 @@ namespace Fiver.Asp.SignalR.API.Hubs
             return Clients.All.InvokeAsync("OnReportPublished", report);
         }
 
+        public Task KeyStroke(char c)
+        {
+            return Clients.All.InvokeAsync("OnKeyStroke", c);
+        }
+
         public override Task OnConnectedAsync()
         {
             Connections.TryAdd(Context.ConnectionId, Context.User.Identity.Name);

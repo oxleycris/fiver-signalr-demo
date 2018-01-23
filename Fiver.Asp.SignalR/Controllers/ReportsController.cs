@@ -14,7 +14,7 @@ namespace Fiver.Asp.SignalR.Controllers
     {
         public async Task<ActionResult> Index()
         {
-            var apiUrl = "http://localhost:58179/api/reports";
+            var apiUrl = "http://localhost:58178/api/reports";
             var reports = new List<Report>();
 
             using (var client = new HttpClient())

@@ -1,9 +1,12 @@
 ﻿(function () {
 
-    let hubUrl = 'http://localhost:58179/reportsPublisher';
+    let hubUrl = 'http://localhost:58178/reportsPublisher';
     let httpConnection = new signalR.HttpConnection(hubUrl);
     let hubConnection = new signalR.HubConnection(httpConnection);
 
+    $("#reportName").on("keypress", function (e) {
+        hubConnection.invoke("KeyStroke", String.fromCharCode(e.which));
+    });
 
     $("#publishReport").click(function () {
         var reportName = $("#reportName").val();
@@ -11,7 +14,7 @@
 
         $.ajax({
             type: "POST",
-            url: "http://localhost:58179/api/reports",
+            url: "http://localhost:58178/api/reports",
             data: JSON.stringify(dataJson),
             contentType: "application/json; charset=UTF-8",
             dataType: 'json'

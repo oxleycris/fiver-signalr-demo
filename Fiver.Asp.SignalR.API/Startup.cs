@@ -28,10 +28,9 @@ namespace Fiver.Asp.SignalR.API
 
             services.AddCors(options =>
             {
-                options.AddPolicy("fiver",
-                    policy => policy.AllowAnyOrigin()
-                                    .AllowAnyHeader()
-                                    .AllowAnyMethod());
+                options.AddPolicy("fiver", policy => policy.AllowAnyOrigin()
+                                                           .AllowAnyHeader()
+                                                           .AllowAnyMethod());
             });
 
             services.AddSignalR();
